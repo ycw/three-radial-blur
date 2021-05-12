@@ -6,7 +6,11 @@ export function RadialBlurPass(
   // inject jsm/postprocessing/Pass module
   Pass,
   // opts
-  { intensity = 1., iterations = 100 } = {}
+  { 
+    intensity = 1., 
+    iterations = 100,
+    radialCenter = new THREE.Vector2() 
+  } = {}
 ) {
 
   return new class extends Pass.Pass {
@@ -15,7 +19,7 @@ export function RadialBlurPass(
       super();
 
       const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
-      uniforms.uRadialCenter.value = new THREE.Vector2();
+      uniforms.uRadialCenter.value = radialCenter;
       uniforms.uIntensity.value = intensity;
       uniforms.uIterations.value = iterations;
 
