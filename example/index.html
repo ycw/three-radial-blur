@@ -1,0 +1,112 @@
+<!doctype html>
+
+<head>
+  <meta charset="utf8">
+  <link rel="icon" href="data:,">
+  <title>RadialBlurPass</title>
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+  <script type="module" defer>
+    import * as THREE from '//cdn.skypack.dev/three@0.128.0?min';
+    import { OrbitControls } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/controls/OrbitControls?min'
+    import { EffectComposer } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/EffectComposer?min'
+    import { RenderPass } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/RenderPass?min'
+    import { ShaderPass } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/ShaderPass?min'
+
+    import { RadialBlurPass } from '../src/RadialBlurPass.js'
+    import * as Pass from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/Pass?min'
+
+    import Tweakpane from '//cdn.skypack.dev/tweakpane';
+
+    // ---- params 
+
+    const params = {
+      uIntensity: .1, // 0to1
+      uIterations: 16, // int
+      uRadialCenter: new THREE.Vector2() // -1to+1
+    };
+
+    // ---- renderer
+
+    const renderer = new THREE.WebGLRenderer();
+    const canvas = renderer.domElement;
+    document.body.append(canvas);
+
+    // ---- camera and controls
+
+    const camera = new THREE.PerspectiveCamera(50, 2, .1, 100);
+    const controls = new OrbitControls(camera, canvas);
+    controls.target.set(0, -1, 0);
+    camera.position.set(-2, -1, 5);
+    controls.enableDamping = true;
+
+    // ---- build scene
+
+    const scene = new THREE.Scene();
+
+    scene.add(new THREE.DirectionalLight());
+    scene.add(new THREE.AmbientLight());
+
+    const url0 = 'https://rawcdn.githack.com/mrdoob/three.js/9365eaf316476eb24da96ec217eb58ab48ccbc8c/examples/textures/floors/FloorsCheckerboard_S_Diffuse.jpg';
+    const tex0 = new THREE.TextureLoader().load(url0);
+    const url1 = 'https://rawcdn.githack.com/mrdoob/three.js/9365eaf316476eb24da96ec217eb58ab48ccbc8c/examples/textures/floors/FloorsCheckerboard_S_Normal.jpg';
+    const tex1 = new THREE.TextureLoader().load(url1);
+    const room = new THREE.Mesh(
+      new THREE.BoxBufferGeometry(8, 8, 8),
+      new THREE.MeshStandardMaterial({ map: tex0, normalMap: tex1, side: THREE.BackSide })
+    );
+    room.position.y = 2;
+    scene.add(room);
+
+    // ---- effect composer
+
+    const fx = new EffectComposer(renderer);
+    fx.addPass(new RenderPass(scene, camera));
+    const radialBlurPass = new RadialBlurPass(THREE, Pass, {
+      intensity: params.uIntensity,
+      iterations: params.uIterations,
+      radialCenter: params.uRadialCenter
+    })
+    fx.addPass(radialBlurPass);
+
+    // ---- gui
+
+    const tweakpane = new Tweakpane();
+    tweakpane.addInput(params, 'uIntensity', { min: 0, max: 1 });
+    tweakpane.addInput(params, 'uIterations', { min: 1, max: 100, step: 1 });
+    tweakpane.addInput(params, 'uRadialCenter', { x: { min: -1, max: 1 }, y: { min: -1, max: 1 } });
+    tweakpane.on('change', ({ presetKey, value }) => {
+      radialBlurPass.uniforms[presetKey].value = value;
+    });
+
+    // ----- render loop
+
+    renderer.setAnimationLoop((t) => {
+      controls.update();
+      fx.render();
+    });
+
+    // ----- on resize
+
+    window.addEventListener('resize', () => {
+      renderer.setSize(innerWidth, innerHeight, false);
+      renderer.setPixelRatio(devicePixelRatio);
+      fx.setSize(innerWidth, innerHeight);
+      fx.setPixelRatio(devicePixelRatio);
+      camera.aspect = canvas.width / canvas.height;
+      camera.updateProjectionMatrix();
+    });
+    dispatchEvent(new Event('resize'));
+  </script>
+</head>
