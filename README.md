@@ -11,6 +11,12 @@ via cdn
 
 https://cdn.jsdelivr.net/gh/ycw/three-radial-blur@{VERSION}/src/RadialBlurPass.js
 
+via npm
+
+`$ npm i ycw/three-radial-blur` or
+
+`$ npm i ycw/three-radial-blur#{VERSION_TAG}`
+
 
 ## Usage
 
