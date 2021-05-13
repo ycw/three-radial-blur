@@ -1,4 +1,4 @@
-export default {
+export const RadialBlurShader = {
   uniforms: {
     'tDiffuse': { value: null },
     'uRadialCenter': { value: null },

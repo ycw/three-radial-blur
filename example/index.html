@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf8">
   <link rel="icon" href="data:,">
-  <title>RadialBlurPass</title>
+  <title>Radial Blur</title>
   <style>
     html,
     body {
@@ -21,12 +21,9 @@
   <script type="module" defer>
     import * as THREE from '//cdn.skypack.dev/three@0.128.0?min';
     import { OrbitControls } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/controls/OrbitControls?min'
-    import { EffectComposer } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/EffectComposer?min'
+    import { EffectComposer, Pass, FullScreenQuad } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/EffectComposer?min'
     import { RenderPass } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/RenderPass?min'
-
-    import { RadialBlurPass } from '../src/RadialBlurPass.js'
-    import * as Pass from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/Pass?min'
-
+    import { RadialBlurPassGen } from '../src/index.js';
     import Tweakpane from '//cdn.skypack.dev/tweakpane';
 
     // ---- params 
@@ -71,18 +68,20 @@
 
     // ---- effect composer
 
-    const fx = new EffectComposer(renderer);
-    fx.addPass(new RenderPass(scene, camera));
-    const radialBlurPass = new RadialBlurPass(THREE, Pass, {
+    const RadialBlurPass = RadialBlurPassGen({ THREE, Pass, FullScreenQuad });
+    const radialBlurPass = new RadialBlurPass({
       intensity: params.uIntensity,
       iterations: params.uIterations,
       radialCenter: params.uRadialCenter
-    })
+    });
+
+    const fx = new EffectComposer(renderer);
+    fx.addPass(new RenderPass(scene, camera));
     fx.addPass(radialBlurPass);
 
     // ---- gui
 
-    const tweakpane = new Tweakpane();
+    const tweakpane = new Tweakpane({ title: 'Radial Blur' });
     tweakpane.addInput(params, 'uIntensity', { min: 0, max: 1 });
     tweakpane.addInput(params, 'uIterations', { min: 1, max: 100, step: 1 });
     tweakpane.addInput(params, 'uRadialCenter', { x: { min: -1, max: 1 }, y: { min: -1, max: 1 } });

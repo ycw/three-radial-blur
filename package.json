@@ -1,9 +1,9 @@
 {
   "name": "three-radial-blur",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "author": "ycw (https://github.com/ycw)",
   "repository": "github:ycw/three-radial-blur",
-  "main": "src/RadialBlurPass.js",
+  "main": "src/index.js",
   "type": "module",
   "license": "MIT",
   "keywords": [

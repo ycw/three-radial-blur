@@ -1,36 +1,29 @@
-import shader from './RadialBlurShader.js'
+import { RadialBlurShader } from './RadialBlurShader.js'
 
-export function RadialBlurPass(
-  // inject lib three
-  THREE,
-  // inject jsm/postprocessing/Pass module
-  Pass,
-  // opts
-  { 
-    intensity = 1., 
-    iterations = 100,
-    radialCenter = new THREE.Vector2() 
-  } = {}
-) {
+export function RadialBlurPassGen({ THREE, Pass, FullScreenQuad }) {
 
-  return new class extends Pass.Pass {
-
-    constructor() {
+  // expose
+  return class RadialBlurPass extends Pass {
+    constructor({
+      intensity = 1.,
+      iterations = 100,
+      radialCenter = new THREE.Vector2()
+    } = {}) {
       super();
 
-      const uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+      const uniforms = THREE.UniformsUtils.clone(RadialBlurShader.uniforms);
       uniforms.uRadialCenter.value = radialCenter;
       uniforms.uIntensity.value = intensity;
       uniforms.uIterations.value = iterations;
 
       const material = new THREE.ShaderMaterial({
         uniforms,
-        vertexShader: shader.vertexShader,
-        fragmentShader: shader.fragmentShader,
+        vertexShader: RadialBlurShader.vertexShader,
+        fragmentShader: RadialBlurShader.fragmentShader,
         glslVersion: THREE.GLSL3
       });
 
-      this.fsQuad = new Pass.FullScreenQuad(material);
+      this.fsQuad = new FullScreenQuad(material);
       this.uniforms = material.uniforms;
     }
 
@@ -39,13 +32,13 @@ export function RadialBlurPass(
 
       if (this.renderToScreen) {
         renderer.setRenderTarget(null);
-        this.fsQuad.render(renderer);
       } else {
         renderer.setRenderTarget(writeBuffer);
         if (this.clear) renderer.clear();
-        this.fsQuad.render(renderer);
       }
+      this.fsQuad.render(renderer);
     }
 
   };
+
 }

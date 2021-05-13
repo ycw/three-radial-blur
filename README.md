@@ -2,14 +2,14 @@
 
 Radial blur pass for threejs postprocessing. 
 
-[live example](https://ycw.github.io/three-radial-blur/example/index.html)
+[Live example](https://ycw.github.io/three-radial-blur/example/index.html)
 
 
 ## Installation
 
 via cdn
 
-https://cdn.jsdelivr.net/gh/ycw/three-radial-blur@{VERSION}/src/RadialBlurPass.js
+https://cdn.jsdelivr.net/gh/ycw/three-radial-blur@{VERSION}/src/index.js
 
 via npm
 
@@ -21,27 +21,34 @@ via npm
 ## Usage
 
 ```js
-import * as THREE from '//path/to/three.js'
-import * as Pass from '//path/to/examples/jsm/postprocessing/Pass.js'
-import { EffectComposer } from '//path/to/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from '//path/to/jsm/postprocessing/RenderPass.js'
-import { RadialBlurPass } from '//path/to/RadialBlurPass.js'
+import * as THREE from '//path/to/three'
+import { EffectComposer, Pass, FullScreenQuad } from '//path/to/jsm/postprocessing/EffectComposer'
+import { RenderPass } from '//path/to/jsm/postprocessing/RenderPass'
+import { RadialBlurPassGen } from '//path/to/three-radial-blur'
 
 ...
+
+// Generate RadialBlurPass class
+const RadialBlurPass = RadialBlurPassGen({ THREE, Pass, FullScreenQuad });
+
+// Create RadialBlurPass instance
+const myRadialBlurPass = new RadialBlurPass(/*..options..*/);
+
+// Add to effect composer
 const fx = new EffectComposer(renderer);
-fx.add(new RenderPass(scene, camera));
-fx.add(new RadialBlurPass(THREE, Pass/*, options */));
-...
+fx.addPass(new RenderPass(scene, camera));
+fx.addPass(myRadialBlurPass);
+
 ```
 
 Available options: 
 
 ```js
-fx.add(new RadialPass(THREE, Pass, {
-  intensity: 1.0, // 0. to 1.; def to 1.
-  iterations: 100, // Blur steps; must >= 1; def to 100
-  radialCenter: new THREE.Vector2() // -1 to 1; def to { x:0, y:0 }
-}));
+{
+  intensity: 1.0, // blur distance; 0. to 1.
+  iterations: 100, // n blur steps; must >= 1
+  radialCenter: new THREE.Vector2() // radial center; -1 to 1
+}
 ```
 
 ## Credits
