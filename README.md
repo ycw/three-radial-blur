@@ -2,7 +2,7 @@
 
 Radial blur pass for threejs postprocessing. 
 
-[Live example](https://ycw.github.io/three-radial-blur/example/index.html)
+[Live example](https://ycw.github.io/three-radial-blur/example/)
 
 
 ## Installation
