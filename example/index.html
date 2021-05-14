@@ -29,14 +29,15 @@
     // ---- params 
 
     const params = {
-      uIntensity: .1, // 0to1
-      uIterations: 16, // int
-      uRadialCenter: new THREE.Vector2() // -1to+1
+      intensity: .1, // 0. to 1.
+      iterations: 16, // 1 to `maxIterations`
+      maxIterations: 100, // ( immutable after creation )
+      radialCenter: new THREE.Vector2() // -1. to +1.
     };
 
     // ---- renderer
 
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGL1Renderer();
     const canvas = renderer.domElement;
     document.body.append(canvas);
 
@@ -70,9 +71,10 @@
 
     const RadialBlurPass = RadialBlurPassGen({ THREE, Pass, FullScreenQuad });
     const radialBlurPass = new RadialBlurPass({
-      intensity: params.uIntensity,
-      iterations: params.uIterations,
-      radialCenter: params.uRadialCenter
+      intensity: params.intensity,
+      iterations: params.iterations,
+      maxIterations: params.maxIterations,
+      radialCenter: params.radialCenter
     });
 
     const fx = new EffectComposer(renderer);
@@ -82,11 +84,13 @@
     // ---- gui
 
     const tweakpane = new Tweakpane({ title: 'Radial Blur' });
-    tweakpane.addInput(params, 'uIntensity', { min: 0, max: 1 });
-    tweakpane.addInput(params, 'uIterations', { min: 1, max: 100, step: 1 });
-    tweakpane.addInput(params, 'uRadialCenter', { x: { min: -1, max: 1 }, y: { min: -1, max: 1 } });
+    tweakpane.addInput(params, 'intensity', { min: 0, max: 1 });
+    tweakpane.addInput(params, 'iterations', { min: 1, max: params.maxIterations, step: 1 });
+    tweakpane.addInput(params, 'radialCenter', { x: { min: -1, max: 1 }, y: { min: -1, max: 1 } });
     tweakpane.on('change', ({ presetKey, value }) => {
-      radialBlurPass.uniforms[presetKey].value = value;
+      radialBlurPass.setIntensity(params.intensity);
+      radialBlurPass.setIterations(params.iterations);
+      radialBlurPass.setRadialCenter(params.radialCenter.x, params.radialCenter.y);
     });
 
     // ----- render loop

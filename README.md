@@ -21,10 +21,10 @@ via npm
 ## Usage
 
 ```js
-import * as THREE from '//path/to/three'
-import { EffectComposer, Pass, FullScreenQuad } from '//path/to/jsm/postprocessing/EffectComposer'
-import { RenderPass } from '//path/to/jsm/postprocessing/RenderPass'
-import { RadialBlurPassGen } from '//path/to/three-radial-blur'
+import * as THREE from 'three'
+import { EffectComposer, Pass, FullScreenQuad } from 'three/examples/jsm/postprocessing/EffectComposer'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import { RadialBlurPassGen } from 'three-radial-blur'
 
 ...
 
@@ -32,24 +32,25 @@ import { RadialBlurPassGen } from '//path/to/three-radial-blur'
 const RadialBlurPass = RadialBlurPassGen({ THREE, Pass, FullScreenQuad });
 
 // Create RadialBlurPass instance
-const myRadialBlurPass = new RadialBlurPass(/*..options..*/);
+const myRadialBlurPass = new RadialBlurPass({
+  intensity: 1.0, // normalize blur distance; 0. to 1.
+  iterations: 10, // total steps along blur distance
+  maxIterations: 100, // max. iterations ( immutable after creation ) 
+  radialCenter: new THREE.Vector2() // radial center; -1. to 1.
+});
 
 // Add to effect composer
 const fx = new EffectComposer(renderer);
 fx.addPass(new RenderPass(scene, camera));
 fx.addPass(myRadialBlurPass);
 
+// APIs
+myRadialBlurPass.maxIterations;
+myRadialBlurPass.setIntensity(1);
+myRadialBlurPass.setIterations(10); 
+myRadialBlurPass.setRadialCenter(0, 0);
 ```
 
-Available options: 
-
-```js
-{
-  intensity: 1.0, // blur distance; 0. to 1.
-  iterations: 100, // n blur steps; must >= 1
-  radialCenter: new THREE.Vector2() // radial center; -1 to 1
-}
-```
 
 ## Credits
 
