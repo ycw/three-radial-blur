@@ -31,7 +31,7 @@ export function RadialBlurPassGen({ THREE, Pass, FullScreenQuad }) {
 
       this._fsQuad = new FullScreenQuad(material);
       this._uniforms = material.uniforms;
-      this._maxIterations = maxIterations;
+      this._defines = material.defines;
     }
 
     render(renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */) {
@@ -46,20 +46,35 @@ export function RadialBlurPassGen({ THREE, Pass, FullScreenQuad }) {
       this._fsQuad.render(renderer);
     }
 
-    setIterations(value) {
-      this._uniforms.uIterations.value = Math.min(value, this._maxIterations);
+    get iterations() {
+      return this._uniforms.uIterations.value;
     }
 
-    setRadialCenter(x, y) {
-      this._uniforms.uRadialCenter.value.set(x, y);
+    set iterations(value) {
+      if (value > this._defines.MAX_ITERATIONS) {
+        console.warn(`iterations (${value}) will be capped by maxIterations (${this._defines.MAX_ITERATIONS}) in shader`);
+      }
+      this._uniforms.uIterations.value = value;
     }
 
-    setIntensity(value) {
+    get intensity() {
+      return this._uniforms.uIntensity.value;
+    }
+
+    set intensity(value) {
       this._uniforms.uIntensity.value = value;
     }
 
+    get radialCenter() {
+      return this._uniforms.uRadialCenter.value;
+    }
+
+    set radialCenter(value) {
+      return this_uniforms.uRadialCenter.value = value;
+    }
+
     get maxIterations() {
-      return this._maxIterations;
+      return this._defines.MAX_ITERATIONS;
     }
 
   };

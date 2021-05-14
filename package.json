@@ -1,6 +1,6 @@
 {
   "name": "three-radial-blur",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "author": "ycw (https://github.com/ycw)",
   "repository": "github:ycw/three-radial-blur",
   "main": "src/index.js",

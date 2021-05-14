@@ -88,9 +88,9 @@
     tweakpane.addInput(params, 'iterations', { min: 1, max: params.maxIterations, step: 1 });
     tweakpane.addInput(params, 'radialCenter', { x: { min: -1, max: 1 }, y: { min: -1, max: 1 } });
     tweakpane.on('change', ({ presetKey, value }) => {
-      radialBlurPass.setIntensity(params.intensity);
-      radialBlurPass.setIterations(params.iterations);
-      radialBlurPass.setRadialCenter(params.radialCenter.x, params.radialCenter.y);
+      radialBlurPass.intensity = params.intensity;
+      radialBlurPass.iterations = params.iterations;
+      radialBlurPass.radialCenter.set(params.radialCenter.x, params.radialCenter.y);
     });
 
     // ----- render loop
