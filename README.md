@@ -45,10 +45,10 @@ fx.addPass(new RenderPass(scene, camera));
 fx.addPass(myRadialBlurPass);
 
 // APIs
-myRadialBlurPass.maxIterations;
-myRadialBlurPass.intensity = 1.0;
-myRadialBlurPass.iterations = 10; 
-myRadialBlurPass.radialCenter.set(0, 0);
+myRadialBlurPass.intensity = 0.; // =no blur
+myRadialBlurPass.maxIterations; //-> 100
+myRadialBlurPass.iterations = 101; // will warn ( iterations > maxIterations )
+myRadialBlurPass.radialCenter.set(-1, -1); // =bottom left corner
 ```
 
 
