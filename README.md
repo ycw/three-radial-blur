@@ -46,9 +46,9 @@ fx.addPass(myRadialBlurPass);
 
 // APIs
 myRadialBlurPass.maxIterations;
-myRadialBlurPass.setIntensity(1);
-myRadialBlurPass.setIterations(10); 
-myRadialBlurPass.setRadialCenter(0, 0);
+myRadialBlurPass.intensity = 1.0;
+myRadialBlurPass.iterations = 10; 
+myRadialBlurPass.radialCenter.set(0, 0);
 ```
 
 
