@@ -24,7 +24,7 @@
     import { EffectComposer, Pass, FullScreenQuad } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/EffectComposer?min'
     import { RenderPass } from '//cdn.skypack.dev/three@0.128.0/examples/jsm/postprocessing/RenderPass?min'
     import { RadialBlurPassGen } from '../src/index.js';
-    import Tweakpane from '//cdn.skypack.dev/tweakpane';
+    import { Pane } from '//cdn.skypack.dev/tweakpane@3.0.0';
 
     // ---- params 
 
@@ -83,11 +83,11 @@
 
     // ---- gui
 
-    const tweakpane = new Tweakpane({ title: 'Radial Blur' });
-    tweakpane.addInput(params, 'intensity', { min: 0, max: 1 });
-    tweakpane.addInput(params, 'iterations', { min: 1, max: params.maxIterations, step: 1 });
-    tweakpane.addInput(params, 'radialCenter', { x: { min: -1, max: 1 }, y: { min: -1, max: 1 } });
-    tweakpane.on('change', ({ presetKey, value }) => {
+    const pane = new Pane({ title: 'Radial Blur' });
+    pane.addInput(params, 'intensity', { min: 0, max: 1 });
+    pane.addInput(params, 'iterations', { min: 1, max: params.maxIterations, step: 1 });
+    pane.addInput(params, 'radialCenter', { x: { min: -1, max: 1 }, y: { min: -1, max: 1 } });
+    pane.on('change', ({ presetKey, value }) => {
       radialBlurPass.intensity = params.intensity;
       radialBlurPass.iterations = params.iterations;
       radialBlurPass.radialCenter.set(params.radialCenter.x, params.radialCenter.y);
